@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+<!--            <TextView-->
+<!--                style="@style/MyTextStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Title" />-->
+
+            <EditText
+                style="@style/MyEditStyle"
+                android:id="@+id/et_title"
+                android:textColor="@color/black"
+                android:hint="Title"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:textColorHint="@color/grey"
+                android:layout_marginStart="5dp"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+<!--        <TextView-->
+<!--            style="@style/MyTextStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Content" />-->
+
+        <EditText
+            style="@style/MyEditStyle"
+            android:hint="Content"
+            android:id="@+id/et_content"
+            android:textColorHint="@color/grey"
+            android:layout_width="match_parent"
+            android:gravity="start"
+            android:layout_height="300dp"
+            android:paddingTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            style="@style/MyBtnStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="add"
+            android:text="ADD" />
+    </LinearLayout>
+
+</ScrollView>
