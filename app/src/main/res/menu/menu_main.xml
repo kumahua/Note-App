@@ -7,4 +7,18 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_baseline_search_24"
         app:actionViewClass="android.widget.SearchView" />
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/menu_linear"
+            android:title="列表布局"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_grid"
+            android:title="網格布局"
+            app:showAsAction="never" />
+
+    </group>
+
 </menu>

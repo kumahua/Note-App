@@ -92,7 +92,7 @@ public class NoteDbOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_NAME_NOTE,null,null,null,null,null,null,null);
 
         if(cursor != null) {
-            while (cursor.moveToNext()) {
+            while (cursor.moveToNext()) { //將指標移至下一筆資料
                 String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
                 String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
                 String content = cursor.getString(cursor.getColumnIndexOrThrow("content"));
@@ -106,7 +106,7 @@ public class NoteDbOpenHelper extends SQLiteOpenHelper {
 
                 noteList.add(note);
             }
-            cursor.close();
+            cursor.close(); //關閉Cursor
         }
 
         return noteList;
@@ -139,5 +139,6 @@ public class NoteDbOpenHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        return noteList;
     }
 }

@@ -2,6 +2,8 @@ package com.example.noteapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,12 +14,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.example.noteapp.adapter.MyAdapter;
 import com.example.noteapp.bean.Note;
 import com.example.noteapp.databinding.ActivityMainBinding;
+import com.example.noteapp.util.SpfUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -29,12 +33,17 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    private FloatingActionButton mBtnAdd;
     private List<Note> mNote;
     private MyAdapter mMyAdapter;
     private NoteDbOpenHelper mNoteDbOpenHelper;
 
     private RecyclerView myRV;
+
+    public static int MODE_LINEAR = 0;
+    public static int MODE_GRID = 1;
+
+    public static final String KEY_LAYOUT_MODE = "key_layout_mode";
+    public int currentListLayoutMode = MODE_LINEAR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         refreshDataFromDb();
+        setListLayout();
+    }
+
+    private void setListLayout() {
+        currentListLayoutMode = SpfUtil.getIntWithDefault(this, KEY_LAYOUT_MODE, MODE_LINEAR);
+        if(currentListLayoutMode == MODE_LINEAR) {
+            setToLinearList();
+        } else {
+            setToGridList();
+        }
+    }
+
+    private void setToGridList() {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
+        myRV.setLayoutManager(gridLayoutManager);
+        mMyAdapter.setViewType(MyAdapter.TYPE_GRID_LAYOUT);
+        mMyAdapter.notifyDataSetChanged();
+    }
+
+    private void setToLinearList() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        myRV.setLayoutManager(linearLayoutManager);
+        mMyAdapter.setViewType(MyAdapter.TYPE_LINEAR_LAYOUT);
+        mMyAdapter.notifyDataSetChanged();
     }
 
     private void refreshDataFromDb() {
@@ -62,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
     private void initEvent() {
         mMyAdapter = new MyAdapter(mNote,this);
         myRV.setAdapter(mMyAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        myRV.setLayoutManager(linearLayoutManager);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        myRV.setLayoutManager(linearLayoutManager);
+//        mMyAdapter.setViewType(MyAdapter.TYPE_LINEAR_LAYOUT);
+        setListLayout();
     }
 
     private void initData() {
@@ -85,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         myRV = binding.rlv;
+        //myRV.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
     }
 
     public void add(View view) {
@@ -119,9 +155,37 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //選單項被點選時呼叫，也就是選單項的監聽方法
+    // 選單項被點選時呼叫，也就是選單項的監聽方法
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        item.setChecked(true);
+        switch(item.getItemId()) {
+            case R.id.menu_linear:
+                setToLinearList();
+                currentListLayoutMode = MODE_LINEAR;
+                SpfUtil.saveInt(this, KEY_LAYOUT_MODE, MODE_LINEAR);
+                return true;
+
+            case R.id.menu_grid:
+                setToGridList();
+                currentListLayoutMode = MODE_GRID;
+                SpfUtil.saveInt(this, KEY_LAYOUT_MODE, MODE_GRID);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //onPrepareOptionsMenu是每次在display menu之前，都會去呼叫，只要按一次menu按鍵，就會呼叫一次。
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(currentListLayoutMode == MODE_LINEAR) {
+            MenuItem menuItem = menu.findItem(R.id.menu_linear);
+            menuItem.setChecked(true);
+        } else {
+            menu.findItem(R.id.menu_grid).setChecked(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 }
